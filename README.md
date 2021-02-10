@@ -4,5 +4,12 @@
 
 > 以 Intellij 作為開發工具。
 >
-> 內容涵蓋 Maven 基礎教學、
-> 
+
+內容涵蓋 
+* Maven 基礎教學
+* java web 起源
+
+
+## Reference
+
+* https://github.com/albert-hg/learning-from-jhipster

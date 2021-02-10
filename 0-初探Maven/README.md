@@ -102,7 +102,7 @@ mvn --version
 
 ```sh
 mvn archetype:generate \
-  -DgroupId=com.sprintboot.management \
+  -DgroupId=com.springboot.management \
   -DartifactId=management-system \
   -DarchetypeArtifactId=maven-archetype-quickstart \ 
   -DarchetypeVersion=1.4 \
@@ -132,7 +132,7 @@ mvn package
 執行
 
 ```sh
-java -cp target/management-system-1.0-SNAPSHOT.jar com.sprintboot.management.App
+java -cp target/management-system-1.0-SNAPSHOT.jar com.springboot.management.App
 ```
 
 ## Maven 生命週期
@@ -167,3 +167,132 @@ mvn clean:clean
 # 執行 archetype plugin 的 generate goal
 mvn archetype:generate
 ```
+
+### plugin 與 goal
+
+每一個 plugin 被加入到 pom.xml，如下
+
+```xml
+<plugin>
+  <groupId>...</groupId>
+  <artifactId>...</artifactId>
+  <version>...</version>
+</plugin>
+```
+
+> 如果 `<groupId>` 為 org.apache.maven.plugins，則 `<groupId>` 可以省略
+
+pom.xml 中的 plugin 可以分成兩大類
+
+* build: 在建構階段執行
+* reporting: 在文件產生階段執行
+
+其中 build 又可細分為 pluginManagement，用於放置預設的 plugin 版本。
+
+> 若將 plugin 放在 build tag 中，則會在 build 時執行。
+>
+> 若將 plugin 放在 reporting tag 中，則會在 reporting 時執行。
+
+以下舉一個簡單的例子
+
+```
+---<project>
+    +---<build>
+    |   +---<plugins>
+    |   |   +---plugin.A_v1.0
+    |   |   +---plugin.B
+    |   |
+    |   +---<pluginManagement>
+    |       +---<plugins>
+    |           +---plugin.B_v1.0
+    |           +---plugin.C_v2.0
+    |           +---plugin.D_v3.0
+    |
+    +---<reporting>
+        +---<plugins>
+            +---plugin.C
+            +---plugin.D_v2.0
+```
+
+* plugin.A 只有定義在 build 中，使用 v1.0
+* plugin.B 在 build 中沒版本號，使用 pluginManagement 定義的 v1.0
+* plugin.C 在 reporting 中沒版本號，使用 pluginManagement 定義的 v2.0
+* plugin.D 在 reporting 中，使用 v2.0
+
+一個 plugin 除了 `<groupId>`、`<artifactId>` 與 `<version>` 還有
+
+* executions：設定goal
+* dependencies：設定額外載入的dependency
+* configuration：一些參數設定
+* ... 等
+
+```xml
+<plugin>
+  <groupId></groupId>
+  <artifactId></artifactId>
+  <version></version>
+  <executions></executions>
+  <dependencies></dependencies>
+  <configuration></configuration>
+</plugin>
+```
+
+executions 中可以設定多個 execution 
+
+```xml
+<plugin>
+  <groupId></groupId>
+  <artifactId></artifactId>
+  <version></version>
+  <executions>
+    <execution>...</execution>
+    <execution>...</execution>
+  </executions>
+</plugin>
+```
+
+每個 execution 中，可設定
+
+* id: 執行時顯示的 tips
+* phase: 指定此execution在哪個phase執行
+* goals: 設定執行plugin時，要執行哪些goal
+* ...等
+
+融會貫通時間
+
+```xml
+<?xml version="1.0"?>
+<project>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>test showing the execution id.</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>dependency-info</goal>
+              <goal>dependencies</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+```
+
+* maven-project-info-reports-plugin 的 `<groupId>` 被省略，因為其為 org.apache.maven.plugins
+* `<phase>clean</phase>` 代表會在 clean phase 時，執行此 execution
+* `<version>3.0.0</version>` 代表使用此版本，忽略 pluginManagement 中的 3.1.0 版
+* `<id>test showing the execution id.</id>` 執行時，將會產生此 tips
