@@ -101,12 +101,7 @@ mvn --version
 用指令創建第一個 Maven 專案
 
 ```sh
-mvn archetype:generate \
-  -DgroupId=com.springboot.management \
-  -DartifactId=management-system \
-  -DarchetypeArtifactId=maven-archetype-quickstart \ 
-  -DarchetypeVersion=1.4 \
-  -DinteractiveMode=false
+mvn archetype:generate -DgroupId=com.springboot.management -DartifactId=management-system  -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
 ```
 
 * -DgroupId: 專案所屬的公司或組織，也是程式碼的資料夾結構 (java 的 package name)
