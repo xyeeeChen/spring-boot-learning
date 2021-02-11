@@ -8,7 +8,10 @@
 內容涵蓋 
 * Maven 基礎教學
 * java web 起源
-
+* 第一個 spring boot
+* spring boot for web
+* spring boot 設定
+* devtool for hot reload
 
 ## Reference
 
