@@ -12,6 +12,7 @@
 * spring boot for web
 * spring boot 設定
 * devtool for hot reload
+* JDBC 與 H2 DB 設定
 
 ## Reference
 
